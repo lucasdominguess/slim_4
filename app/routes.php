@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Application\Actions\Test_InstanceClassAction\InstanceAction;
 use App\Application\Actions\User\ListUsersAction;
 use App\Application\Actions\User\ViewUserAction;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -14,7 +15,7 @@ return function (App $app) {
         // CORS Pre-Flight OPTIONS Request Handler
         global $env;
         return $response
-            ->withHeader('Access-Control-Allow-Origin', "$env[access_origin]")
+            ->withHeader('Access-Control-Allow-Origin', ".$env[access_origin]")
             ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization,X-Arquivo')
             ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
             ->withHeader('Access-Control-Allow-Credentials', 'true');
@@ -22,8 +23,11 @@ return function (App $app) {
 
     $app->get('/', function (Request $request, Response $response) {
         $response->getBody()->write('Hello world!');
+
+
         return $response;
     });
+    $app->get('/Test',InstanceAction::class);
 
     $app->group('/users', function (Group $group) {
         $group->get('', ListUsersAction::class);

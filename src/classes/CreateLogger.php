@@ -1,14 +1,11 @@
 <?php
 namespace App\classes;
 
-
-
 use Exception;
 use Monolog\Level;
 use Monolog\Logger;
 use App\classes\Email;
 use Monolog\Handler\StreamHandler;
-
 
 use Monolog\Handler\TelegramBotHandler;
 
@@ -62,9 +59,9 @@ class CreateLogger {
     public function loggerTelegram(string $title ,string $msg, bool $sendEmail = false ,string $nivel = 'warning', array|string $extra = null){
         try {
             
-            global $env;
-            $apikey = $env['apyKey'];
-            $channel = $env['channel'];
+        
+            $apikey = ENV['apyKey'];
+            $channel =ENV['channel'];
             $ftitle = strtoupper(str_replace([' ','.','-'],'_',$title));
             $logger = new Logger(strtoupper($ftitle));
             
@@ -82,18 +79,14 @@ class CreateLogger {
         ));
             $this->loggerCSV($title,$msg,$nivel);
             if ($sendEmail) {
-                $this->loggerEmail($title,$msg,$env['email_log']);
+                $this->loggerEmail($title,$msg,ENV['email_log']);
             }
             $logger->$nivel($msg);
             
         } catch (\Throwable $th) {
-            $this->loggerCSV('Erro_logTelegram','Tentativa de criar Log Telegran falhou :'.$th->getMessage().$th->getCode());
+            $this->loggerCSV('Erro_logTelegram','Tentativa de criar Log Telegram falhou :'.$th->getMessage().$th->getCode());
             throw new Exception('Erro ao criar LogTelegran');
         }
-        
-       
-    
-
 }  
 /**
  * @method mixed loggerEmail() Envia um email para o desenvolvedor responsavel com erro Critico
@@ -103,11 +96,10 @@ class CreateLogger {
  * @param array|string $extra Conteudo extra (opcional) enviando com pushProcessor , setado como null por padrao
  * @author Lucas_Domingues
  */
-    public function loggerEmail(string $title ,string $msg ,string|array $to ="lucasdomingues25.dev@gmail.com
-",array|string $extra = null) { 
+    public function loggerEmail(string $title ,string $msg ,string|array $to =null,array|string $extra = null) { 
 
         try {
-           
+            
             $fsubject = strtoupper(str_replace(['.','-'],'_',$title));
             $logger = new Logger ($fsubject); 
             
@@ -118,8 +110,9 @@ class CreateLogger {
             });
         }
             $e = new Email;
-            $e->mandar_email($to,null,$fsubject,$msg);
-            $logger->critical('Esta é uma mensagem de erro crítico!');
+            $to === null ? ENV['email_log'] : $to;
+            $e->sendEmail($to,null,$fsubject,$msg);
+            $logger->critical($msg);
         } catch (\Throwable $th) {
             $this->loggerCSV('Erro_log_Email','Tentativa de criar Log Por email falhou :'.$th->getMessage());
             throw new Exception('Erro ao criar LogEmail');

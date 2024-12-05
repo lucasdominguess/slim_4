@@ -8,24 +8,23 @@ use App\classes\CreateLogger;
 class Sql extends \PDO
 /**
  * Conexão com banco de dados
- * @param $env variavel env com dados para conexão do banco
+ * @param $ENV variavel env com dados para conexão do banco
 
  *  
  */
     {   
         public function __construct(public CreateLogger $log) {
             try {
-                global $env;
-
-                parent::__construct("{$env['sgbd']}:
-                dbname={$env['dbname']};
-                host={$env['host']};
-                port={$env['port']}",
-                $env['user'],
-                $env['password']);
+                parent::__construct(
+                "{.".ENV['sgbd']."}:
+                dbname={".ENV['dbname']."};
+                host={".ENV['host']."};
+                port={".ENV['port']."}",
+                ENV['user'],
+                ENV['password']);
             } catch (\PDOException $th) {
               
-                $this->log->loggerTelegram("ERRO-SQL","Erro ao conectar banco de dados {$env['sgbd']},",true);
+                $this->log->loggerTelegram("ERRO-SQL","Erro ao conectar banco de dados ".ENV['sgbd']."",true);
                 throw new \PDOException('Erro ao conectar banco de dados');
             }
           

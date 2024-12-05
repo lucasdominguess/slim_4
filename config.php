@@ -1,5 +1,8 @@
 <?php 
 
+
+define('ENV', parse_ini_file(__DIR__ . '/.env'));
+
 $GLOBALS['TZ'] = new \DateTimeZone( 'America/Sao_Paulo');
 
 $GLOBALS['datefull'] = (new DateTime('now', $GLOBALS['TZ']))->format('Y-m-d H:i:s');

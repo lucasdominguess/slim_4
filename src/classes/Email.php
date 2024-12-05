@@ -15,7 +15,7 @@ require __DIR__.'../../../vendor/autoload.php'; // Necessario caso a classe seja
 class Email 
 { 
 /**
- * @method mandar_email  metodo responsavel por fazer o envio de email 
+ * @method sendEmail  metodo responsavel por fazer o envio de email 
  * OBS: caso essa classe esteja fora da aplicação (como serviço) buscar com require "caminho_seuprojeto/vendor/autoload.php"
  * @param string|array $email email do usuario , podendo passar um array com varios emails 
  * @param string $subject Titulo do email 
@@ -23,7 +23,7 @@ class Email
 
  *  
  * */
-public function mandar_email(string |array $email,$name='',string $subject,string $body)
+public function sendEmail(string |array $email,$name='',string $subject,string $body)
     {
         global $env ; 
         $mail = new PHPMailer(true);
